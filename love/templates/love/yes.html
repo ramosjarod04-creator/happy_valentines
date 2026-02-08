@@ -1,0 +1,218 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>YES 💕</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            background: #ffb6c1;
+            margin: 0;
+            min-height: 100vh;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Message (STEADY) */
+        .message-wrapper {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .message {
+            font-size: 1.5rem;
+            color: white;
+            text-shadow: 2px 2px 6px #000;
+        }
+
+        /* Heart wrapper and heartbeat */
+        .heart-wrapper {
+            width: 420px;
+            height: 380px;
+            animation: heartbeat 3.5s ease-in-out infinite;
+        }
+        @keyframes heartbeat {
+            0% {transform: scale(1);}
+            20% {transform: scale(1.04);}
+            40% {transform: scale(1);}
+            60% {transform: scale(1.06);}
+            80% {transform: scale(1);}
+            100% {transform: scale(1);}
+        }
+
+        svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .slide {
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+        }
+        .slide.active {
+            opacity: 1;
+        }
+
+        .heart-outline {
+            animation: glowPulse 3s ease-in-out infinite;
+        }
+        @keyframes glowPulse {
+            0% {
+                stroke-width: 8;
+                filter: drop-shadow(0 0 6px white);
+            }
+            50% {
+                stroke-width: 11;
+                filter: drop-shadow(0 0 20px white)
+                        drop-shadow(0 0 35px rgba(255,182,193,0.9));
+            }
+            100% {
+                stroke-width: 8;
+                filter: drop-shadow(0 0 6px white);
+            }
+        }
+
+        /* Name (STEADY) */
+        .name-wrapper {
+            width: 100%;
+            margin-top: 20px;
+        }
+        .name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 1px 1px 4px #000;
+        }
+
+        /* Gift Button */
+        .gift-btn {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #ff4081, #ff80ab);
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 50px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+            100% { transform: scale(1); }
+        }
+        .gift-btn:hover {
+            background: linear-gradient(135deg, #ff80ab, #ff4081);
+        }
+
+        /* Falling hearts */
+        .heart {
+            position: absolute;
+            animation: fall linear forwards;
+        }
+        @keyframes fall {
+            from { transform: translateY(0); opacity: 1; }
+            to { transform: translateY(100vh); opacity: 0; }
+        }
+
+        @media (max-width: 600px) {
+            .heart-wrapper {
+                width: 300px;
+                height: 270px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="message-wrapper">
+    <div class="message">
+        You said YES 😍💖 Happy Valentines Day 🌹
+    </div>
+</div>
+
+<!-- Heart SVG with slideshow -->
+<div class="heart-wrapper">
+    <svg viewBox="0 0 512 512">
+        <defs>
+            <mask id="heartMask">
+                <rect width="100%" height="100%" fill="black"/>
+                <path fill="white" d="
+                    M256 464
+                    L48 256
+                    C-16 192 16 64 128 64
+                    C192 64 256 128 256 128
+                    C256 128 320 64 384 64
+                    C496 64 528 192 464 256
+                    Z
+                "/>
+            </mask>
+        </defs>
+
+        <image href="{% static 'images/photo1.jpg' %}" width="512" height="512"
+               mask="url(#heartMask)" preserveAspectRatio="xMidYMid slice"
+               class="slide active"/>
+
+        <image href="{% static 'images/photo2.jpg' %}" width="512" height="512"
+               mask="url(#heartMask)" preserveAspectRatio="xMidYMid slice"
+               class="slide"/>
+
+        <image href="{% static 'images/photo3.jpg' %}" width="512" height="512"
+               mask="url(#heartMask)" preserveAspectRatio="xMidYMid slice"
+               class="slide"/>
+
+        <path class="heart-outline" d="
+            M256 464
+            L48 256
+            C-16 192 16 64 128 64
+            C192 64 256 128 256 128
+            C256 128 320 64 384 64
+            C496 64 528 192 464 256
+            Z
+        " fill="none" stroke="white"/>
+    </svg>
+</div>
+
+<div class="name-wrapper">
+    <div class="name">Mica 💖</div>
+</div>
+
+<a href="{% url 'mica' %}" class="gift-btn">
+    🎁 Open my gift for you
+</a>
+
+<script>
+/* Falling hearts */
+function createHeart() {
+    const heart = document.createElement("div");
+    heart.textContent = "❤️";
+    heart.className = "heart";
+    heart.style.left = Math.random() * window.innerWidth + "px";
+    heart.style.top = "-50px";
+    heart.style.fontSize = (Math.random() * 25 + 20) + "px";
+    heart.style.animationDuration = (Math.random() * 3 + 4) + "s";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 7000);
+}
+setInterval(createHeart, 200);
+
+/* Slideshow */
+const slides = document.querySelectorAll(".slide");
+let index = 0;
+setInterval(() => {
+    slides[index].classList.remove("active");
+    index = (index + 1) % slides.length;
+    slides[index].classList.add("active");
+}, 5000);
+</script>
+
+</body>
+</html>

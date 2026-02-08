@@ -1,0 +1,169 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Always & Forever 💖</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(to bottom, #ffb6c1, #ffc0cb);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: monospace;
+    overflow: hidden;
+}
+
+.image-container {
+    position: relative;
+    width: 95%;
+    max-width: 650px;
+    aspect-ratio: 3 / 4;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+    background: black;
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    cursor: pointer;
+}
+
+.overlay-text {
+    position: absolute;
+    bottom: 15px;
+    width: 100%;
+    text-align: center;
+    color: white;
+    font-family: Arial, sans-serif;
+    text-shadow: 0 0 15px #ff69b4, 0 0 30px #ff1493;
+}
+</style>
+</head>
+<body>
+
+<div class="image-container">
+    <canvas id="textCanvas"></canvas>
+    <div class="overlay-text">
+        <p>Always & Forever 🌹</p>
+    </div>
+</div>
+
+<script>
+const canvas = document.getElementById("textCanvas");
+const ctx = canvas.getContext("2d");
+
+function resizeCanvas() {
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+}
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
+
+const img = new Image();
+img.src = "{% static 'images/mica.jpg' %}";
+img.onload = () => requestAnimationFrame(draw);
+
+let t = 0;
+
+/* ================= SPARKLES ================= */
+const sparkles = [];
+const sparkleColors = ["#ffb6c1", "#ff69b4", "#c77dff", "#ffffff"];
+
+canvas.addEventListener("click", (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    for (let i = 0; i < 18; i++) {
+        sparkles.push({
+            x,
+            y,
+            angle: Math.random() * Math.PI * 2,
+            speed: Math.random() * 3 + 1,
+            life: 30,
+            size: Math.random() * 3 + 2,
+            color: sparkleColors[Math.floor(Math.random() * sparkleColors.length)]
+        });
+    }
+});
+
+function drawSparkles() {
+    for (let i = sparkles.length - 1; i >= 0; i--) {
+        const s = sparkles[i];
+
+        s.x += Math.cos(s.angle) * s.speed;
+        s.y += Math.sin(s.angle) * s.speed;
+        s.life--;
+
+        ctx.globalAlpha = s.life / 30;
+        ctx.fillStyle = s.color;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+        ctx.fill();
+
+        if (s.life <= 0) sparkles.splice(i, 1);
+    }
+    ctx.globalAlpha = 1;
+}
+
+/* ================= HEART TEXT ================= */
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // faint portrait
+    ctx.globalAlpha = 0.35;
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    ctx.globalAlpha = 1;
+
+    const step = 10;
+    ctx.font = `${step}px monospace`;
+    ctx.textBaseline = "top";
+
+    const text = "I LOVE YOU MICA ";
+    let index = 0;
+
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
+
+    t += 0.04;
+    const pulse = 1 + Math.sin(t) * 0.08;
+
+    for (let y = 0; y < canvas.height; y += step) {
+        for (let x = 0; x < canvas.width; x += step) {
+
+            let nx = (x - cx) / (canvas.width * 0.35);
+            let ny = (y - cy) / (canvas.height * 0.35);
+
+            ny *= -1;
+            nx /= pulse;
+            ny /= pulse;
+
+            const heart =
+                Math.pow(nx*nx + ny*ny - 1, 3) -
+                nx*nx*ny*ny*ny <= 0;
+
+            const char = text[index++ % text.length];
+
+            ctx.fillStyle = heart
+                ? "rgb(255,170,200)"   // 💖 Melody
+                : "rgb(90,45,120)";    // 🖤 Kuromi
+
+            ctx.fillText(char, x, y);
+        }
+    }
+
+    drawSparkles();
+    requestAnimationFrame(draw);
+}
+</script>
+
+</body>
+</html>

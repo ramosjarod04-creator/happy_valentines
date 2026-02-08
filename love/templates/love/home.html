@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Be My Valentine 💖</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background: pink;
+            font-family: Arial;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+            flex-direction: column;
+        }
+
+        .intro {
+            font-size: 20px;
+            color: #fff;
+            text-shadow: 2px 2px 5px #ff69b4;
+            animation: glowText 2s ease-in-out infinite alternate;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        @keyframes glowText {
+            0% { text-shadow: 2px 2px 5px #ff69b4; }
+            100% { text-shadow: 2px 2px 15px #fff; }
+        }
+
+        .intro button {
+            margin-top: 25px;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 15px;
+            border: none;
+            background: red;
+            color: white;
+            cursor: pointer;
+        }
+
+        .valentine {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .valentine h1 {
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .valentine button {
+            font-size: 20px;
+            padding: 10px 30px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            position: absolute;
+            transition: transform 0.2s;
+        }
+
+        .yes {
+            background: red;
+            color: white;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        @keyframes heartbeat {
+            0%,100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .no {
+            background: white;
+            color: red;
+        }
+
+        .think {
+            position: fixed;
+            top: 18%;
+            font-size: 22px;
+            color: white;
+            text-shadow: 2px 2px 8px #000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .think.show {
+            opacity: 1;
+        }
+
+        @keyframes heartbreak {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(-20deg); }
+            50% { transform: rotate(20deg); }
+            75% { transform: rotate(-20deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        .heartbreak {
+            animation: heartbreak 0.5s;
+        }
+
+        .heart {
+            position: fixed;
+            font-size: 24px;
+            animation: floatUp 3s ease-out forwards;
+            pointer-events: none;
+            color: red;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-400px) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="intro" id="intro">
+    <p>Hi! I'm <strong>Janico Castillo</strong> 😄</p>
+    <p>I just wanted to tell you… I really really like you! 💖</p>
+    <p><em>I fell in love with you when I didn’t want to fall in love with anyone.</em> 🌸</p>
+    <p>Let's see where this leads 🌹</p>
+    <button id="startBtn">Continue</button>
+</div>
+
+<div class="valentine" id="valentine">
+    <h1>Micaela Joy Calma, Will you be my Valentine? 💘</h1>
+    <a href="{% url 'yes' %}">
+        <button class="yes">Yes ❤️</button>
+    </a>
+    <button class="no" id="noBtn">No 💔</button>
+</div>
+
+<div class="think" id="thinkMsg"></div>
+
+<script>
+    const intro = document.getElementById("intro");
+    const startBtn = document.getElementById("startBtn");
+    const valentine = document.getElementById("valentine");
+    const noBtn = document.getElementById("noBtn");
+    const thinkMsg = document.getElementById("thinkMsg");
+
+    let noClicks = 0;
+    let runawayMode = false;
+
+    startBtn.onclick = () => {
+        intro.style.display = "none";
+        valentine.style.display = "flex";
+        noBtn.style.top = "120px";
+        noBtn.style.left = "120px";
+    };
+
+    function moveButton() {
+        if (!runawayMode) return;
+        const maxX = window.innerWidth - noBtn.offsetWidth;
+        const maxY = window.innerHeight - noBtn.offsetHeight;
+        noBtn.style.left = Math.random() * maxX + "px";
+        noBtn.style.top = Math.random() * maxY + "px";
+    }
+
+    function showMessage(text) {
+        thinkMsg.textContent = text;
+        thinkMsg.classList.add("show");
+        setTimeout(() => thinkMsg.classList.remove("show"), 1200);
+    }
+
+    function heartbreakEffect() {
+        noBtn.classList.add("heartbreak");
+        setTimeout(() => noBtn.classList.remove("heartbreak"), 500);
+    }
+
+    function spawnBrokenHeart() {
+        const heart = document.createElement("div");
+        heart.classList.add("heart");
+        heart.textContent = "💔";
+        heart.style.left = Math.random() * window.innerWidth + "px";
+        heart.style.fontSize = (16 + Math.random()*20) + "px";
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 3000);
+    }
+
+    noBtn.addEventListener("click", () => {
+        noClicks++;
+        heartbreakEffect();
+        spawnBrokenHeart();
+
+        if (noClicks === 1) showMessage("Think twice 🥹");
+        else if (noClicks === 2) {
+            showMessage("Sure ka ba talaga? 🥺");
+            runawayMode = true;
+        }
+        else if (noClicks === 3) showMessage("Too slow 😜");
+        else if (noClicks >= 4) {
+            showMessage("Okay fine 😭");
+            runawayMode = false;
+            for(let i=0;i<20;i++){
+                setTimeout(spawnBrokenHeart, i*100);
+            }
+        }
+    });
+
+    noBtn.addEventListener("mouseover", moveButton);
+    noBtn.addEventListener("touchstart", moveButton);
+</script>
+
+</body>
+</html>
