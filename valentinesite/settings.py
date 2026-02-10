@@ -1,11 +1,12 @@
 import os
+import dj_database_url
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-=6+9ga&s0*pmw&j5!7een@d)8$0lxcm90z2*2=ql)5qb(j9vc9'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-=6+9ga&s0*pmw&j5!7een@d)8$0lxcm90z2*2=ql)5qb(j9vc9')
 
 # Set DEBUG to True for local development, False for Vercel production
 DEBUG = os.environ.get('VERCEL') != '1'
@@ -58,14 +59,19 @@ TEMPLATES = [
 WSGI_APPLICATION = 'valentinesite.wsgi.application'
 
 
-# Database
-# Note: SQLite is temporary on Vercel (resets on every deploy)
+# Database Configuration
+# Uses Vercel Postgres if available, otherwise falls back to SQLite
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
 }
+
+# Fix for Postgres URL provided by Vercel if it uses the 'postgres://' prefix
+if DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql':
+    DATABASES['default']['OPTIONS'] = {'sslmode': 'require'}
 
 
 # Password validation
