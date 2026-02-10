@@ -6,14 +6,10 @@
       "use": "@vercel/python"
     }
   ],
-  "images": {
-    "sizes": [640, 750, 828, 1080, 1200],
-    "dangerouslyAllowSVG": true
-  },
   "routes": [
     {
       "src": "/static/(.*)",
-      "dest": "/static/$1"
+      "dest": "static/$1"
     },
     {
       "src": "/(.*)",
