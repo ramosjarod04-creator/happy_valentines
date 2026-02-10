@@ -1,0 +1,11 @@
+# .vercelignore
+.git
+.venv
+env/
+venv/
+__pycache__/
+*.pyc
+db.sqlite3
+.ipynb_checkpoints/
+*.csv
+*.xlsx
