@@ -85,16 +85,15 @@ USE_I18N = True
 USE_TZ = True
 
 # --- STATIC FILES CONFIGURATION ---
+# settings.py
 STATIC_URL = '/static/'
 
-# Tells Django to look in the root 'static' folder next to manage.py
-STATICFILES_DIRS = [BASE_DIR / 'static']
+# Look in your root 'static' folder (where Mica's photos are)
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
-# 2. CHANGE THIS: Set it to 'staticfiles_build/static' 
-# This is the Vercel-specific path that often fixes 404s
-STATIC_ROOT = BASE_DIR / 'staticfiles_build' / 'static'
+# This is where Django will move files during build
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
 
-# 3. Use the Manifest storage to ensure unique filenames
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # 4. Keep this as a safety net
