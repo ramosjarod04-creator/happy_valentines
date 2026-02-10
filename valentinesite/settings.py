@@ -14,9 +14,7 @@ DEBUG = os.environ.get('VERCEL') != '1'
 # Allow Vercel domains and local development
 ALLOWED_HOSTS = ['.vercel.app', 'now.sh', 'localhost', '127.0.0.1']
 
-
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -58,9 +56,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'valentinesite.wsgi.application'
 
-
 # Database Configuration
-# Uses the DATABASE_URL secret you provided
 DATABASES = {
     'default': dj_database_url.config(
         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
@@ -68,13 +64,11 @@ DATABASES = {
     )
 }
 
-# 2. ONLY add SSL options if the engine is actually PostgreSQL
-# This prevents the "sslmode" error when you are working locally with SQLite
-if DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql':
+# SSL options for PostgreSQL
+if DATABASES['default'].get('ENGINE') == 'django.db.backends.postgresql':
     DATABASES['default']['OPTIONS'] = {
         'sslmode': 'require',
     }
-
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -84,24 +78,26 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-
 # Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
+# --- STATIC FILES CONFIGURATION ---
 
-# Static files (CSS, JavaScript, Images)
-# STATIC_URL is the URL users see. 
-# STATICFILES_DIRS is where your images LIVE now (your 'static' folder).
-# STATIC_ROOT is where they are COPIED for the production server.
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'love','static')]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Optimize WhiteNoise for performance
-# If this causes 500 errors, change to 'whitenoise.storage.CompressedStaticFilesStorage'
+# 1. If you move the 'static' folder to the root (recommended):
+STATICFILES_DIRS = [BASE_DIR / 'static']
+
+# 2. Where Django will collect all files for Vercel
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# 3. Tells WhiteNoise to search for files in STATICFILES_DIRS if they aren't in STATIC_ROOT yet
+WHITENOISE_USE_FINDERS = True
+
+# 4. Storage engine (Compressed version is safest for initial deployment)
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # Default primary key field type
