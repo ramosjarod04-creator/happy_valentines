@@ -139,7 +139,6 @@
     </div>
 </div>
 
-<!-- Heart SVG with slideshow -->
 <div class="heart-wrapper">
     <svg viewBox="0 0 512 512">
         <defs>
@@ -157,15 +156,18 @@
             </mask>
         </defs>
 
-        <image href="{% static 'images/photo1.jpg' %}" width="512" height="512"
+        <image xlink:href="{% static 'images/photo1.jpg' %}" href="{% static 'images/photo1.jpg' %}" 
+               width="512" height="512"
                mask="url(#heartMask)" preserveAspectRatio="xMidYMid slice"
                class="slide active"/>
 
-        <image href="{% static 'images/photo2.jpg' %}" width="512" height="512"
+        <image xlink:href="{% static 'images/photo2.jpg' %}" href="{% static 'images/photo2.jpg' %}" 
+               width="512" height="512"
                mask="url(#heartMask)" preserveAspectRatio="xMidYMid slice"
                class="slide"/>
 
-        <image href="{% static 'images/photo3.jpg' %}" width="512" height="512"
+        <image xlink:href="{% static 'images/photo3.jpg' %}" href="{% static 'images/photo3.jpg' %}" 
+               width="512" height="512"
                mask="url(#heartMask)" preserveAspectRatio="xMidYMid slice"
                class="slide"/>
 
