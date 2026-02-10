@@ -90,13 +90,14 @@ STATIC_URL = '/static/'
 # Tells Django to look in the root 'static' folder next to manage.py
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
-# The folder Vercel should create during build
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+# 2. CHANGE THIS: Set it to 'staticfiles_build/static' 
+# This is the Vercel-specific path that often fixes 404s
+STATIC_ROOT = BASE_DIR / 'staticfiles_build' / 'static'
 
-# Use WhiteNoise storage
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+# 3. Use the Manifest storage to ensure unique filenames
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# THE FIX: If 'staticfiles' is missing, search in STATICFILES_DIRS instead.
+# 4. Keep this as a safety net
 WHITENOISE_USE_FINDERS = True
 
 # Default primary key field type
