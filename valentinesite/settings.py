@@ -97,7 +97,7 @@ USE_TZ = True
 # STATICFILES_DIRS is where your images LIVE now (your 'static' folder).
 # STATIC_ROOT is where they are COPIED for the production server.
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'love','static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Optimize WhiteNoise for performance
