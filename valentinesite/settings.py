@@ -87,16 +87,18 @@ USE_TZ = True
 # --- STATIC FILES CONFIGURATION ---
 STATIC_URL = '/static/'
 
-# Points to your root 'static' folder next to manage.py
+# Tells Django to look at your root 'static' folder (where images/ reside)
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
-# Where files go after running collectstatic
+# The location where Vercel will attempt to collect files
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Using standard storage to avoid the "No directory" warning
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+# WhiteNoise Configuration
+# Using CompressedStaticFilesStorage ensures Vercel serves optimized files
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
-# Allows WhiteNoise to find files in STATICFILES_DIRS during the build
+# CRITICAL FIX: This allows WhiteNoise to serve files from STATICFILES_DIRS 
+# if the 'staticfiles' directory is missing or empty during runtime.
 WHITENOISE_USE_FINDERS = True
 
 # Default primary key field type
