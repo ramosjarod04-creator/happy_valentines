@@ -87,14 +87,14 @@ USE_TZ = True
 # --- STATIC FILES CONFIGURATION ---
 STATIC_URL = '/static/'
 
-# Points to the 'static' folder next to manage.py
+# Points to your root 'static' folder next to manage.py
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # Where files go after running collectstatic
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# WhiteNoise storage - ensures images are compressed and cached
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+# Using standard storage to avoid the "No directory" warning
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 # Allows WhiteNoise to find files in STATICFILES_DIRS during the build
 WHITENOISE_USE_FINDERS = True
