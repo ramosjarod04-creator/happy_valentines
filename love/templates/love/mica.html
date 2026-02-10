@@ -44,6 +44,7 @@ canvas {
     color: white;
     font-family: Arial, sans-serif;
     text-shadow: 0 0 15px #ff69b4, 0 0 30px #ff1493;
+    pointer-events: none; /* Allows clicks to pass through to the canvas */
 }
 </style>
 </head>
@@ -68,8 +69,21 @@ resizeCanvas();
 window.addEventListener("resize", resizeCanvas);
 
 const img = new Image();
+
+// 1. Define what happens when it loads
+img.onload = () => {
+    console.log("Image loaded successfully from: " + img.src);
+    requestAnimationFrame(draw);
+};
+
+// 2. Define what happens if it FAILS (Check your browser console for this!)
+img.onerror = () => {
+    console.error("CRITICAL ERROR: Could not find image at " + img.src);
+    console.log("Check if static/images/mica.jpg exists and matches case exactly.");
+};
+
+// 3. Set the source AFTER defining listeners
 img.src = "{% static 'images/mica.jpg' %}";
-img.onload = () => requestAnimationFrame(draw);
 
 let t = 0;
 

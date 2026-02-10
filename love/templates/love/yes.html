@@ -1,7 +1,8 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>YES 💕</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -116,9 +117,10 @@
         .heart {
             position: absolute;
             animation: fall linear forwards;
+            pointer-events: none;
         }
         @keyframes fall {
-            from { transform: translateY(0); opacity: 1; }
+            from { transform: translateY(-50px); opacity: 1; }
             to { transform: translateY(100vh); opacity: 0; }
         }
 
@@ -139,7 +141,6 @@
     </div>
 </div>
 
-<!-- Heart SVG with slideshow -->
 <div class="heart-wrapper">
     <svg viewBox="0 0 512 512">
         <defs>
@@ -196,22 +197,27 @@ function createHeart() {
     heart.textContent = "❤️";
     heart.className = "heart";
     heart.style.left = Math.random() * window.innerWidth + "px";
-    heart.style.top = "-50px";
     heart.style.fontSize = (Math.random() * 25 + 20) + "px";
     heart.style.animationDuration = (Math.random() * 3 + 4) + "s";
     document.body.appendChild(heart);
     setTimeout(() => heart.remove(), 7000);
 }
-setInterval(createHeart, 200);
+setInterval(createHeart, 300);
 
-/* Slideshow */
+/* Slideshow logic */
 const slides = document.querySelectorAll(".slide");
-let index = 0;
-setInterval(() => {
-    slides[index].classList.remove("active");
-    index = (index + 1) % slides.length;
-    slides[index].classList.add("active");
-}, 5000);
+let slideIndex = 0;
+
+function showNextSlide() {
+    if (slides.length === 0) return;
+    
+    slides[slideIndex].classList.remove("active");
+    slideIndex = (slideIndex + 1) % slides.length;
+    slides[slideIndex].classList.add("active");
+}
+
+// Start slideshow every 5 seconds
+setInterval(showNextSlide, 5000);
 </script>
 
 </body>
