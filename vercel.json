@@ -1,4 +1,5 @@
 {
+  "version": 2,
   "builds": [
     {
       "src": "valentinesite/wsgi.py",
@@ -10,5 +11,7 @@
       "src": "/(.*)",
       "dest": "valentinesite/wsgi.py"
     }
-  ]
+  ],
+  "installCommand": "pip install -r requirements.txt",
+  "buildCommand": "python manage.py collectstatic --noinput"
 }

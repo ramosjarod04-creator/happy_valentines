@@ -29,7 +29,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', # Essential for static files on Vercel
+    'whitenoise.middleware.WhiteNoiseMiddleware', # MUST be directly below SecurityMiddleware
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -60,18 +60,20 @@ WSGI_APPLICATION = 'valentinesite.wsgi.application'
 
 
 # Database Configuration
-# Uses Vercel Postgres if available, otherwise falls back to SQLite
+# Uses the DATABASE_URL secret you provided
 DATABASES = {
     'default': dj_database_url.config(
         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
         conn_max_age=600,
-        conn_health_checks=True,
     )
 }
 
-# Fix for Postgres URL provided by Vercel if it uses the 'postgres://' prefix
+# 2. ONLY add SSL options if the engine is actually PostgreSQL
+# This prevents the "sslmode" error when you are working locally with SQLite
 if DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql':
-    DATABASES['default']['OPTIONS'] = {'sslmode': 'require'}
+    DATABASES['default']['OPTIONS'] = {
+        'sslmode': 'require',
+    }
 
 
 # Password validation
@@ -91,11 +93,15 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-STATIC_URL = 'static/'
+# STATIC_URL is the URL users see. 
+# STATICFILES_DIRS is where your images LIVE now (your 'static' folder).
+# STATIC_ROOT is where they are COPIED for the production server.
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Optimize WhiteNoise for performance
+# If this causes 500 errors, change to 'whitenoise.storage.CompressedStaticFilesStorage'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
