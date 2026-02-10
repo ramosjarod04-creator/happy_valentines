@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'love',
+    'whitenoise.runserver_nostatic', # Helps WhiteNoise handle static in development
 ]
 
 MIDDLEWARE = [
@@ -85,22 +86,19 @@ USE_I18N = True
 USE_TZ = True
 
 # --- STATIC FILES CONFIGURATION ---
-
 STATIC_URL = '/static/'
 
-# 1. If you move the 'static' folder to the root (recommended):
+# Tells Django where your images are now (the root static folder)
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
-# 2. Where Django will collect all files for Vercel
+# Where Django will "collect" files during the Vercel build
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# 3. Tells WhiteNoise to search for files in STATICFILES_DIRS if they aren't in STATIC_ROOT yet
-WHITENOISE_USE_FINDERS = True
-
-# 4. Storage engine (Compressed version is safest for initial deployment)
+# Storage engine for WhiteNoise (Compressed is best for Vercel)
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+
+# Allows WhiteNoise to find files in your STATICFILES_DIRS
+WHITENOISE_USE_FINDERS = True
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-WHITENOISE_AUTOREFRESH = True  # Only for debugging!
