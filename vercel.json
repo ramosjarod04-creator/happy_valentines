@@ -4,6 +4,11 @@
     {
       "src": "valentinesite/wsgi.py",
       "use": "@vercel/python"
+    },
+    {
+      "src": "build.sh",
+      "use": "@vercel/static-build",
+      "config": { "distDir": "staticfiles" }
     }
   ],
   "routes": [
@@ -15,7 +20,5 @@
       "src": "/(.*)",
       "dest": "valentinesite/wsgi.py"
     }
-  ],
-  "installCommand": "pip install -r requirements.txt",
-  "buildCommand": "python manage.py collectstatic --noinput"
+  ]
 }
